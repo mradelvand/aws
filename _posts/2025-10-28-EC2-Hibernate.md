@@ -1,7 +1,7 @@
 ---
 title: "Architectural Deep Dive: EC2 Hibernate"
 date: 2025-10-28
-categories: [AWS Architecture]
+categories: [aws-architecture]
 tags: [EC2, Hibernate, Networking]
 ---
 
