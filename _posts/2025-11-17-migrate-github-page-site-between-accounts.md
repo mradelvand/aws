@@ -117,3 +117,41 @@ git push -u origin main --force
 
 Your site will appear at:  
 [https://mradelvand.github.io/soccer](https://mradelvand.github.io/soccer)
+
+---
+
+## Step 9 — Updating the Site in the Future
+
+For any change, follow the standard workflow:
+```bash
+cd newblog/
+git status
+git add .
+git commit -m "Describe your change"
+git push origin main
+```
+GitHub Pages updates automatically after each push.
+
+---
+
+## Step 10 — Troubleshooting
+
+| Problem | Solution |
+|----------|-----------|
+| GitHub Pages says “There isn’t a GitHub Pages site here.” | Enable Pages in **Settings → Pages** |
+| Push rejected due to remote commits | Use `git push --force` if your local copy is correct |
+| Changes not showing | Make sure you ran `git add` and `git commit` before pushing |
+
+---
+
+## Summary of Actions
+
+| Action | Description |
+|--------|--------------|
+| Clone repo from Account A | Local copy of old site |
+| → Copy folder to `newblog/` | Prepare new working directory |
+| → Remove old remote | Detach from Account A |
+| → Add new remote (Account B) | Point repo to new location |
+| → Push site | Upload code |
+| → Enable Pages | Make website live |
+| → Done | New site URL active |
