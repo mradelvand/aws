@@ -6,7 +6,7 @@ Welcome to my personal documentation space — a collection of hands-on notes, a
 
 ##  Explore by Category
 
-- [AWS Architecture](archive.html#aws-architecture)
+- [aws-architecture](archive.html#aws-architecture)
 - [AWS Storage](archive.html#aws-storage)
 - [AWS Networking](archive.html#aws-networking)
 - [AWS Security](archive.html#aws-security)
