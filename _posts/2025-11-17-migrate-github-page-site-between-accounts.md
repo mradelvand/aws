@@ -34,3 +34,86 @@ From your terminal:
 ```bash
 git clone https://github.com/A_USERNAME/A_USERNAME.github.io
 ```
+This creates:
+> A_USERNAME.github.io/
+
+## Step 2 — Copy the Project Into a New Folder
+Make a new working folder for the new account:
+```bash
+cp -R A_USERNAME.github.io newblog/
+```
+
+Directory structure:
+
+newblog/
+
+This folder will become the new GitHub Pages project under Account B.
+
+---
+
+## Step 3 — Remove the Old Git Remote
+
+Inside newblog/:
+```bash
+cd newblog
+git remote remove origin
+git remote -v   # Should show nothing
+```
+This disconnects the folder from Account A.
+
+---
+
+## Step 4 — Add the New Remote (Account B)
+```bash
+git remote add origin https://github.com/B_USERNAME/newblog.git
+```
+---
+
+## Step 5 — Switch to the main Branch
+```bash
+git branch -M main
+```
+
+---
+
+## Step 6 — Create a Personal Access Token (PAT)
+
+GitHub no longer accepts passwords when pushing.
+You must use a Personal Access Token.
+
+1. Account B → Settings
+2. Developer settings → Personal access tokens
+3. Click Generate new token (classic)
+4. Name the token
+5. Select scopes:
+repo
+workflow (optional)
+6. Generate → Copy it somewhere safe (you can’t view it again!)
+
+## Step 7 — Push the Site to Account B
+```bash
+git push -u origin main
+```
+Git asks:
+```bash
+Username: B_USERNAME
+Password: <paste your PAT>
+```
+If you get a push rejection:
+! [rejected] main -> main (fetch first)
+That means GitHub auto-generated commits in the repo.
+
+Fix:
+git push -u origin main --force
+
+## Step 8 — Enable GitHub Pages (Account B)
+
+1. Go to **Settings → Pages** in your repository.  
+2. Set the following options:  
+   - **Source:** Deploy from branch  
+   - **Branch:** main  
+   - **Folder:** / (root)  
+3. Save your changes.  
+
+Your site will appear at:  
+[https://mradelvand.github.io/soccer](https://mradelvand.github.io/soccer)
