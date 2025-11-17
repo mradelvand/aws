@@ -14,6 +14,8 @@ Welcome to my personal documentation space — a collection of hands-on notes, a
 - [DevOps & Automation](archive.html#devops--automation)
 - [AWS DevOps](archive.html#aws-devops)
 
+- [Github Pages](archive.html#gitHub-pages)
+
 > [📁 Blog Archive](archive.html).
 
 ---
