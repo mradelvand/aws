@@ -10,11 +10,14 @@ tags: [GitHub-Pages, Jekyll, baseurl, relative_url, slugify]
 
 A guide to `baseurl`, `relative_url`, and `slugify` (with real examples).
 
-When creating two GitHub Pages project sites:
+> Optional: If you want to learn more about GitHub Pages migrations, check out my previous post: [Migrate a GitHub Pages Site Between Accounts — Step-by-Step Guide](https://mradelvand.github.io/aws/github%20pages/devops%20&%20automation/2025/11/17/migrate-github-page-site-between-accounts.html)
 
+
+When creating two GitHub Pages project sites:
+```bash
 username.github.io/aws
 username.github.io/soccer
-
+```
 
 a common problem appears — all the blog posts inside the AWS site open incorrect URLs.
 
