@@ -46,7 +46,7 @@ Expect practical notes, architectural insights, and publishable mini-projects bu
 ##  Latest Posts
 
 {% for post in site.posts limit:5 %}
-- [{{ post.title }}]({{ post.url }}) — *{{ post.date | date: "%B %Y" }}*
+- [{{ post.url | relative_url }}]({{ post.url }}) — *{{ post.date | date: "%B %Y" }}*
 {% endfor %}
 
 ---
