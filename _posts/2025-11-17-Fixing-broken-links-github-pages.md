@@ -23,12 +23,12 @@ a common problem appears — all the blog posts inside the AWS site open incorre
 
 Instead of:
 
-> https://username.github.io/aws/aws-architecture/2025/10/28/EC2-Hibernate.html
+> https://username.github.io/aws/aws-architecture/2025/10/28/post1.html
 
 
 the URLs look like:
 
-> https://username.github.io/aws-architecture/2025/10/28/EC2-Hibernate.html
+> https://username.github.io/aws-architecture/2025/10/28/post1.html
 
 
 This means:
@@ -74,8 +74,9 @@ Before the fix, your archive or index page might have links like:
 ```
 post.url contains only the post path, for example:
 
-/aws-architecture/2025/10/28/EC2-Hibernate.html
-
+```bash
+/aws-architecture/2025/10/28/post1
+```
 But this creates a broken URL because the /aws/ prefix is missing.
 
 By adding | relative_url:
