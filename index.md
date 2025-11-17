@@ -48,5 +48,4 @@ Expect practical notes, architectural insights, and publishable mini-projects bu
 {% for post in site.posts limit:5 %}
 - [{{ post.title }}]({{ post.url | relative_url }}) — *{{ post.date | date: "%B %Y" }}*
 {% endfor %}
-
 ---
