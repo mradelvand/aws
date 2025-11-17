@@ -19,7 +19,7 @@ Welcome to my personal documentation space — a collection of hands-on notes, a
 ---
 
 ##  Featured Learning Module
-**[AWS Networking Overview](2025/10/20/aws-networking-overview.html)**  
+**[AWS Networking Overview](aws networking/2025/10/20/aws-networking-overview.html)**  
 An introductory guide to **Virtual Private Clouds (VPCs)** — covering subnets, routing, and how AWS isolates networking environments. Perfect for beginners transitioning into AWS or network automation.
 
 ---
