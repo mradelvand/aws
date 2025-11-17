@@ -21,7 +21,7 @@ email: "LAB_ADAN@outlook.com"
 ######### Nothing below needs to be changed (unless you know what you're doing) #########
 #########################################################################################
 theme: "minima"
-
+baseurl: "/aws"
 rss: rss
 
 kramdown:
