@@ -5,7 +5,8 @@ categories: [AWS Architecture]
 tags: [ELB, ALB, Quiz, High Availability, Scalability, Networking]
 ---
 
-# Mastering AWS Elastic Load Balancer (ELB)
+# Architectural Deep Dive: AWS Elastic Load Balancer (ELB) Overview
+
 
 For any **AWS Solutions Architect Associate (SAA-C03)** candidate, understanding the **Elastic Load Balancer (ELB)** is essential.  
 ELB is the backbone of **High Availability (HA)** and **scalability** in AWS architectures.
