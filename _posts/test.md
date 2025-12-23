@@ -1,6 +1,5 @@
----
-
 # Technical Evaluation Report: Cisco Secure Firewall 1220 CX
+---
 
 **Subject:** Image Selection Strategy (ASA vs. FTD) & SDC Implementation Plan
 **Date:** December 23, 2025
