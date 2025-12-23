@@ -1,0 +1,141 @@
+---
+
+# Technical Evaluation Report: Cisco Secure Firewall 1220 CX
+
+**Subject:** Image Selection Strategy (ASA vs. FTD) & SDC Implementation Plan
+**Date:** December 23, 2025
+**Prepared For:** IT Management / Network Operations
+**Hardware:** Cisco Secure Firewall 1220 CX (CSF-1220CX)
+**Current Firmware Under Test:** ASA 9.22
+
+---
+
+## Part 1: ASA vs. Firepower (FTD)
+
+We are currently evaluating which software image to standardize on for our new 1220 CX hardware. While we have been testing with the classic ASA image, the hardware supports the modern Firepower Threat Defense (FTD) image.
+
+### Executive Summary & Recommendation
+
+* **Use Firepower (FTD) if:** We need a Next-Generation Firewall (NGFW). This includes deep visibility (seeing *what* applications are running, not just ports), Intrusion Prevention (IPS), URL filtering, and Malware defense. This is the industry standard for edge security.
+* **Use ASA if:** The device is acting strictly as a high-performance Layer 4 firewall, a complex VPN concentrator for remote workers, or if our team relies heavily on CLI automation and legacy ASA syntax.
+
+### Comparison Matrix
+
+| Feature | Cisco ASA (Adaptive Security Appliance) | Cisco FTD (Firepower Threat Defense) |
+| --- | --- | --- |
+| **Primary Role** | L3/L4 Stateful Firewall & VPN Concentrator. | Next-Gen Firewall (L7 App Control, IPS, URL Filtering). |
+| **Visibility** | Limited to IP addresses and Ports (e.g., "TCP/80"). | Deep Application Visibility (e.g., "Facebook-Video," "Dropbox-Upload"). |
+| **Management** | CLI, ASDM (On-box), CDO (Cloud). | FMC (Centralized), FDM (On-box), CDO (Cloud). |
+| **DevOps/Auto** | Mature CLI automation; REST API available. | API-first design; better integration with Terraform/Ansible. |
+| **Security** | Rules based on IP/Port. No native anti-malware. | Rules based on Users, Apps, & Geo-location. Built-in Snort IPS. |
+
+### Decision Questionnaire (ASA vs. Firepower)
+
+*To finalize our decision, we must answer the following questions regarding our environment:*
+
+1. **Do we require Deep Packet Inspection (IPS/IDS)?**
+* *If Yes:* **FTD** is required. ASA cannot natively inspect packet payloads for exploits (e.g., Log4j attacks) without additional modules.
+
+
+2. **Is this device primarily for Client VPN (AnyConnect)?**
+* *If Yes:* **ASA** is historically the gold standard for AnyConnect, though FTD has reached near-parity. If we have complex, legacy VPN configs, ASA is safer.
+
+
+3. **Do we want to manage policies based on "Applications" or "Ports"?**
+* *Analysis:* Managing by Application (e.g., "Allow Office365") is easier to maintain than managing by IP lists. **FTD** excels here.
+
+
+4. **Are we using Terraform or Infrastructure-as-Code (IaC)?**
+* *Analysis:* While both support automation, **FTD** is generally more aligned with modern cloud-native workflows and API-driven management.
+
+
+
+---
+
+## Part 2: Secure Device Connector (SDC) Implementation
+
+We are proceeding with testing the **Secure Device Connector (SDC)** to manage the CSF-1220CX via Cisco Defense Orchestrator (CDO). This ensures the management interface does not need to be exposed to the public internet.
+
+### Environmental Responses (Pre-filled)
+
+*Based on our current infrastructure and location (Quebec, Canada), here are the recommended answers to the pre-deployment questions:*
+
+**1. Which management platform/region will you use?**
+
+* **Answer:** `us.manage.security.cisco.com` (North America / US Region).
+* *Reasoning:* As we are located in Laval, Quebec, the US region offers the lowest latency and is the standard tenancy for Canadian organizations not strictly bound to EU data residency.
+
+**2. Will the ASA be contacted directly from the internet or via an on-premises SDC?**
+
+* **Answer:** **On-premises SDC.**
+* *Reasoning:* For a lab/testing environment of the 1220 CX, keeping the management interface private (RFC1918) and using an internal SDC is the secure best practice.
+
+**3. Where will you host the SDC VM?**
+
+* **Answer:** **Local Hypervisor (ESXi/vSphere) or Linux Host.**
+* *Requirement:* We need a VM (Ubuntu 20.04/22.04 or the Cisco OVA) with:
+* 2 vCPU, 2GB RAM, 64GB Disk.
+* **Outbound Access:** TCP/443 to `*.cisco.com` and TCP/80 to `ubuntu.com` (for updates).
+* *Note:* Since we use AWS, we *could* host the SDC in AWS if we have a VPN/Direct Connect back to the lab, but a local VM is simpler for testing hardware on our desk.
+
+
+
+**4. ASA Details for Onboarding**
+
+* **Mode:** Single Context (Default for 1200 series).
+* **HA Status:** Standalone (for current testing phase).
+* **Management Interface:** `management 1/1` (Standard on 1220).
+* **Port Conflict Check:** *Action Required.* We must confirm if AnyConnect is enabled on the management interface. If so, we will move the management HTTPS port to **8443**.
+
+**5. IP Address of the SDC Host**
+
+* **Answer:** `[INSERT_LOCAL_IP_HERE]` (e.g., 192.168.x.x)
+* *Action:* We need to assign a static IP to the SDC VM so we can lock down the ASA to accept management traffic *only* from this specific IP.
+
+### Implementation Checklist (Safe & Non-Disruptive)
+
+**Step 1: Validation (Read-Only)**
+Run these commands on the ASA CLI to verify current state:
+
+```bash
+show version                    ! Confirms 9.22 version
+show run http                   ! Checks if HTTP server is enabled
+show run ssl                    ! Checks TLS settings
+show crypto ca certificates     ! Checks for valid identity cert
+
+```
+
+**Step 2: SDC Deployment (Ubuntu VM)**
+
+* Deploy OVA or install SDC on Ubuntu.
+* Register SDC to CDO using the bootstrap token from the `us.manage.security.cisco.com` portal.
+* Verify SDC status is "Active" in the cloud dashboard.
+
+**Step 3: ASA Configuration (Copy/Paste)**
+*Once the SDC IP is confirmed, apply the following to allow the SDC to talk to the ASA:*
+
+```bash
+! Enable HTTP server for management
+http server enable 8443
+
+! Only allow the SDC IP (Replace x.x.x.x with SDC IP)
+http x.x.x.x 255.255.255.255 management
+
+```
+
+**Step 4: Onboard to Cloud**
+
+* In CDO Portal: Select **Onboard Device** > **ASA**.
+* Select the **SDC** we just deployed.
+* Enter ASA IP and Port (8443).
+* Enter Credentials.
+
+---
+
+### **Next Steps**
+
+1. **Decision:** Confirm if we stick with ASA 9.22 or re-image to FTD 7.x based on the Comparison Matrix.
+2. **Action:** Assign a static IP to the SDC VM.
+3. **Execution:** I will apply the `http` commands to the ASA and complete the pairing.
+
+---
